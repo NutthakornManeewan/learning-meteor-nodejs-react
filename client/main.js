@@ -4,26 +4,16 @@ import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
 
 import { Players } from '../imports/api/players';
-import TitleBar from '../imports/ui/TitleBar';
-import Addplayer from '../imports/ui/Addplayer';
-import PlayerList from '../imports/ui/PlayerList';
+import App from '../imports/ui/App';
 
 Meteor.startup(function() 
 {
   // Call tracker.autorun - to sync with real MongoDB.
-  Tracker.autorun(function() 
-  {
-    let players = Players.find().fetch();
+  Tracker.autorun(function() {
+  
+    let players = Players.find({},{sort:{score:-1}}).fetch();
     let title = 'SCORE KEEP';
-    let jsx = (
-      
-      <div>
-        <TitleBar title={title} subtitle="created by Nutthakorn Maneewan"/>
-        <PlayerList players={players}/>
-        <Addplayer score={0} />
-      </div>
-
-    );
-    ReactDOM.render(jsx, document.getElementById('app'));
+    ReactDOM.render(<App title={title} players={players}/>, document.getElementById('app'));
+    // Sort database = db.players.find().sort({score:-1});
   });
 });
